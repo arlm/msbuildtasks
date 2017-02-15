@@ -307,6 +307,11 @@ namespace MSBuild.Community.Tasks
                     if (BufferSize>0)
                         zip.BufferSize = BufferSize;
 
+                    string workingDirectory = null;
+                    
+                    if (!string.IsNullOrEmpty(WorkingDirectory))
+                        workingDirectory = Path.GetFullPath(WorkingDirectory);
+
                     foreach (ITaskItem fileItem in Files)
                     {
                         string name = Path.GetFullPath(fileItem.ItemSpec);
@@ -314,11 +319,17 @@ namespace MSBuild.Community.Tasks
 
                         // clean up name
                         if (Flatten)
+                        {
                             directoryPathInArchive = string.Empty;
-                        else if (!string.IsNullOrEmpty(WorkingDirectory))
-                            directoryPathInArchive = GetPath(name, Path.GetFullPath(WorkingDirectory));
+                        }
+                        else if (!string.IsNullOrEmpty(workingDirectory))
+                        {
+                            directoryPathInArchive = GetPath(name, workingDirectory);
+                        }
                         else
+                        {
                             directoryPathInArchive = null;
+                        }
 
                         if (!File.Exists(name))
                         {
@@ -347,11 +358,11 @@ namespace MSBuild.Community.Tasks
 
                         if (zip.ContainsEntry(Path.Combine(path, name)))
                         {
-                            entry = zip.UpdateEntry(name, path);
+                            entry = zip.UpdateFile(name, path);
                         }
                         else
                         {
-                            entry = zip.AddEntry(name, path);
+                            entry = zip.AddFile(name, path);
                         }
 
                         if (!Quiet)
