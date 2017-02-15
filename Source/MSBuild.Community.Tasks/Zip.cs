@@ -358,10 +358,16 @@ namespace MSBuild.Community.Tasks
 
                         if (zip.ContainsEntry(Path.Combine(path, name)))
                         {
+                            if (!Quiet)
+                                Log.LogMessage(Resources.ZipUpdate, name, path);
+
                             entry = zip.UpdateFile(name, path);
                         }
                         else
                         {
+                            if (!Quiet)
+                                Log.LogMessage(Resources.ZipAdd, name, path);
+
                             entry = zip.AddFile(name, path);
                         }
 
