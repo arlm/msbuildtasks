@@ -341,7 +341,17 @@ namespace MSBuild.Community.Tasks
                             && Path.GetFileName(directoryPathInArchive) == Path.GetFileName(name))
                             directoryPathInArchive = Path.GetDirectoryName(directoryPathInArchive);
 
-                        var entry = zip.AddFile(name, GetArchivePath(RootDirectory, directoryPathInArchive));
+                        ZipEntry entry;
+
+                        if (zip.ContainsEntry(name))
+                        {
+                            entry = zip.UpdateFile(name, GetArchivePath(RootDirectory, directoryPathInArchive));
+                        }
+                        else
+                        {
+                            entry = zip.AddFile(name, GetArchivePath(RootDirectory, directoryPathInArchive));
+                        }
+
                         if (!Quiet)
                             Log.LogMessage(Resources.ZipAdded, entry.FileName);
                     }
