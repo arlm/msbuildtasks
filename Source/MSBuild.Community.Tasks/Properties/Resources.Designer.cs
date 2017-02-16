@@ -1028,15 +1028,6 @@ namespace MSBuild.Community.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updated file {0} on {1}..
-        /// </summary>
-        internal static string ZipAdd {
-            get {
-                return ResourceManager.GetString("ZipAdd", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to   added &quot;{0}&quot;..
         /// </summary>
         internal static string ZipAdded {
@@ -1073,11 +1064,11 @@ namespace MSBuild.Community.Tasks.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Added file {0} on {1}..
+        ///   Looks up a localized string similar to  updated &quot;{0}&quot;..
         /// </summary>
-        internal static string ZipUpdate {
+        internal static string ZipUpdated {
             get {
-                return ResourceManager.GetString("ZipUpdate", resourceCulture);
+                return ResourceManager.GetString("ZipUpdated", resourceCulture);
             }
         }
     }

@@ -269,8 +269,13 @@ namespace MSBuild.Community.Tasks
 
                 bool shouldLoad = !Overwrite && File.Exists(ZipFileName);
 
-                using (var zip = shouldLoad ? ZipFile.Read(ZipFileName) : new ZipFile())
+                using (var zip = new ZipFile())
                 {
+                    if (shouldLoad)
+                    {
+                        zip.Initialize(ZipFileName);
+                    }
+
                     if (!ParallelCompression)
                     {
                         zip.ParallelDeflateThreshold = -1;
@@ -353,28 +358,25 @@ namespace MSBuild.Community.Tasks
                             directoryPathInArchive = Path.GetDirectoryName(directoryPathInArchive);
 
                         var path = GetArchivePath(RootDirectory, directoryPathInArchive);
-                        var entryPath = Path.Combine(path, name);
 
                         ZipEntry entry;
 
-                        if (zip.ContainsEntry(entryPath))
+                        if (shouldLoad)
                         {
-                            if (!Quiet)
-                                Log.LogMessage(Resources.ZipUpdate, name, path);
+                            entry = zip.UpdateFile(name, path);
 
-                            zip.RemoveEntry(entryPath);
-                            entry = zip.AddFile(name, path);
+                            if (!Quiet)
+                                Log.LogMessage(Resources.ZipUpdated, entry.FileName);
                         }
                         else
                         {
-                            if (!Quiet)
-                                Log.LogMessage(Resources.ZipAdd, name, path);
+
 
                             entry = zip.AddFile(name, path);
-                        }
 
-                        if (!Quiet)
-                            Log.LogMessage(Resources.ZipAdded, entry.FileName);
+                            if (!Quiet)
+                                Log.LogMessage(Resources.ZipAdded, entry.FileName);
+                        }
                     }
 
                     zip.Save(ZipFileName);
