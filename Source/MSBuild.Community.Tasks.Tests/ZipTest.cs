@@ -18,7 +18,7 @@ namespace MSBuild.Community.Tasks.Tests
     {
         public const string ZIP_FILE_NAME = @"MSBuild.Community.Tasks.zip";
         public const string ZIP_WITH_FOLDERS_FILE_NAME = @"MSBuild.Community.Tasks.WithFolders.zip";
-        public const string ZIP_WITH_RELATIVE_FILE_NAME = @"MSBuild.Community.Tasks.WithReltive.zip";
+        public const string ZIP_WITH_RELATIVE_FILE_NAME = @"MSBuild.Community.Tasks.WithRelative.zip";
 	    public const string ZIP_128KB_FILE_NAME = @"MSBuild.Community.Tasks.128KB.zip";
 
         [Test(Description = "Zip files into a zip archive")]
@@ -61,7 +61,6 @@ namespace MSBuild.Community.Tasks.Tests
             string[] filesFromXmlDirectory = new string[0]; //Directory.GetFiles(workingDir + "\\" + "Xml", "*.*", SearchOption.TopDirectoryOnly);
 
             var filesAndDirectories = new string[files.Length + directories.Length + filesFromXmlDirectory.Length];
-
 
             files.CopyTo(filesAndDirectories, 0);
             directories.CopyTo(filesAndDirectories, files.Length + filesFromXmlDirectory.Length);
