@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using Ionic.Zip;
 using Ionic.Zlib;
 using Microsoft.Build.Framework;
@@ -269,6 +270,17 @@ namespace MSBuild.Community.Tasks
 
                 bool shouldLoad = !Overwrite && File.Exists(ZipFileName);
 
+                if (shouldLoad)
+                {
+                    int i = 0;
+
+                    while(IsLocked(ZipFileName) && i <= 8)
+                    {
+                        Thread.Sleep(250);
+                        i++;
+                    }
+                }
+
                 using (var zip = new ZipFile())
                 {
                     if (shouldLoad)
@@ -390,6 +402,25 @@ namespace MSBuild.Community.Tasks
             }
 
             return true;
+        }
+
+        private static bool IsLocked(string filePath)
+        {
+            FileStream fs = null;
+
+            try
+            {
+                fs = File.OpenWrite(filePath);
+                return false;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
+            finally
+            {
+                fs?.Dispose();
+            }
         }
 
         private static string GetArchivePath(string rootDirectory, string directoryPathInArchive)
